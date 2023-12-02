@@ -1,0 +1,29 @@
+package lib
+
+import java.io.File
+import java.util.*
+
+
+var day: Int? = 1
+var year: Int? = 2023
+
+suspend fun main() {
+
+    day = day ?: Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+    year = year ?: 2023
+
+    val path = "src/main/kotlin/aoc$year/day$day/"
+    File(path).mkdirs()
+
+    InputDownloader.instance.createInputFile(day!!, year!!)
+    //InputDownloader.instance.createDescriptionFile(day!!, year!!)
+
+    val template = File("src/main/resources/template").readText()
+    val solver = template
+        .replace("<day>", "$day")
+        .replace("<year>", "$year")
+    val output = File(path + "day${day}Solver.kt")
+    if (!output.exists()) {
+        output.writeText(solver)
+    }
+}
